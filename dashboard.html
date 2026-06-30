@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rainbow Smart Device Dashboard</title>
+  <style>
+    :root {
+      --bg1: #ff6b6b;
+      --bg2: #ffd166;
+      --bg3: #06d6a0;
+      --bg4: #118ab2;
+      --bg5: #9b5de5;
+      --panel: rgba(255, 255, 255, 0.9);
+      --text: #2d2140;
+      --muted: #6d647a;
+      --shadow: 0 20px 60px rgba(47, 38, 70, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.45), transparent 24%),
+        linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 28%, var(--bg3) 58%, var(--bg4) 80%, var(--bg5) 100%);
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      padding: 24px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .hero-card, .side-card {
+      background: var(--panel);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.08);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      background: linear-gradient(90deg, #fff0f5, #eff6ff);
+      color: #9b5de5;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      border-radius: 18px;
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(243,247,255,0.95));
+    }
+
+    .stat .label {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .stat .value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .side-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pulse {
+      border-radius: 18px;
+      padding: 14px;
+      background: linear-gradient(135deg, #fff4f8, #eef8ff);
+      border: 1px solid #f2d8ff;
+    }
+
+    .pulse .title {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .bars {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      height: 70px;
+      margin-top: 10px;
+    }
+
+    .bars span {
+      flex: 1;
+      border-radius: 999px 999px 4px 4px;
+      background: linear-gradient(180deg, #ff7aa2, #7ab8ff);
+      animation: rise 1.4s ease-in-out infinite alternate;
+    }
+
+    .bars span:nth-child(2){ animation-delay: .12s; }
+    .bars span:nth-child(3){ animation-delay: .24s; }
+    .bars span:nth-child(4){ animation-delay: .36s; }
+    .bars span:nth-child(5){ animation-delay: .48s; }
+
+    .content {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 14px 36px rgba(0,0,0,0.08);
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 20px;
+    }
+
+    .device-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .device-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #fffdfc;
+      border: 1px solid #f1e7ff;
+    }
+
+    .device-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #ffe7f0, #e8f3ff);
+    }
+
+    .device-name {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .device-meta {
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .status-chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-chip.on,
+    .status-chip.active {
+      background: #dbf7e8;
+      color: #1e7b4b;
+    }
+
+    .status-chip.off {
+      background: #fff3cf;
+      color: #9b6b00;
+    }
+
+    .status-chip.default {
+      background: #f0ebff;
+      color: #6b4ec6;
+    }
+
+    .note-card {
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 10px;
+      background: linear-gradient(135deg, #fff9f5, #f7f4ff);
+      border: 1px solid #f0dfff;
+    }
+
+    .note-card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .note-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    @keyframes rise {
+      from { transform: scaleY(0.5); opacity: .6; }
+      to { transform: scaleY(1); opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .hero, .content { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      body { padding: 12px; }
+      .app { padding: 16px; }
+      .hero-card, .side-card, .panel { padding: 16px; }
+      .stats { grid-template-columns: 1fr; }
+      .device-card { flex-direction: column; align-items: flex-start; }
+      .device-main { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="badge">🌈 Rainbow Control Center</div>
+        <h1>Smart Device Dashboard</h1>
+        <p>หน้าจอแสดงสถานะอุปกรณ์ที่สดใส น่ารัก และเรียบง่าย พร้อมให้คุณติดตามทุกอย่างได้ในมุมมองเดียว</p>
+        <div class="stats" id="stats"></div>
+      </div>
+
+      <div class="side-card">
+        <div class="pulse">
+          <div class="title">Live Signal</div>
+          <div>ระบบกำลังรับข้อมูลจากอุปกรณ์ของคุณ</div>
+          <div class="bars">
+            <span style="height: 40px"></span>
+            <span style="height: 60px"></span>
+            <span style="height: 82px"></span>
+            <span style="height: 66px"></span>
+            <span style="height: 88px"></span>
+          </div>
+        </div>
+        <div class="note-card">
+          <h3>✨ สบายตาและสวยงาม</h3>
+          <p>ดีไซน์ธีมสีรุ้งที่ให้ความรู้สึกสดใส พร้อมการจัดเรียงข้อมูลที่อ่านง่ายและน่าติดตาม</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="content">
+      <div class="panel">
+        <h2>📦 Device List</h2>
+        <div class="device-list" id="deviceList"></div>
+      </div>
+
+      <div class="panel">
+        <h2>💡 Quick Summary</h2>
+        <div class="note-card">
+          <h3>สถานะโดยรวม</h3>
+          <p>อุปกรณ์ LED และเซ็นเซอร์อยู่ในสถานะที่พร้อมใช้งาน โดยมีการแยกประเภทชัดเจนเพื่อให้คุณติดตามได้ง่าย</p>
+        </div>
+        <div class="note-card">
+          <h3>คอนโทรลที่ใช้งานได้</h3>
+          <p>คุณสามารถต่อยอดเป็นหน้าแสดงผลแบบเรียลไทม์จาก API หรือฐานข้อมูลในอนาคตได้ทันที</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const deviceData = {
+      success: true,
+      count: 5,
+      data: [
+        { id: "1", device_name: "LED1", device_type: "LED", pin: "13", status: "ON", created_at: "2026-06-30 10:16:41" },
+        { id: "2", device_name: "LED2", device_type: "LED", pin: "12", status: "OFF", created_at: "2026-06-30 10:16:41" },
+        { id: "3", device_name: "Temperature", device_type: "SENSOR", pin: "34", status: "ACTIVE", created_at: "2026-06-30 10:16:41" },
+        { id: "4", device_name: "Humidity", device_type: "SENSOR", pin: "35", status: "ACTIVE", created_at: "2026-06-30 10:16:41" },
+        { id: "5", device_name: "Soil Moisture", device_type: "SENSOR", pin: "36", status: "ACTIVE", created_at: "2026-06-30 10:16:41" }
+      ]
+    };
+
+    const statsEl = document.getElementById('stats');
+    const listEl = document.getElementById('deviceList');
+
+    function getStatusClass(status) {
+      const value = String(status).toLowerCase();
+      if (value === 'on' || value === 'active') return 'on';
+      if (value === 'off') return 'off';
+      return 'default';
+    }
+
+    function getIcon(type) {
+      return type === 'LED' ? '💡' : '🌡️';
+    }
+
+    const totalDevices = deviceData.data.length;
+    const ledCount = deviceData.data.filter(d => d.device_type === 'LED').length;
+    const sensorCount = deviceData.data.filter(d => d.device_type === 'SENSOR').length;
+    const activeCount = deviceData.data.filter(d => ['ON', 'ACTIVE'].includes(d.status)).length;
+
+    statsEl.innerHTML = [
+      `<div class="stat"><span class="label">Total devices</span><span class="value">${totalDevices}</span></div>`,
+      `<div class="stat"><span class="label">LEDs</span><span class="value">${ledCount}</span></div>`,
+      `<div class="stat"><span class="label">Sensors</span><span class="value">${sensorCount}</span></div>`,
+      `<div class="stat"><span class="label">Active now</span><span class="value">${activeCount}</span></div>`
+    ].join('');
+
+    listEl.innerHTML = deviceData.data.map(device => `
+      <div class="device-card">
+        <div class="device-main">
+          <div class="icon">${getIcon(device.device_type)}</div>
+          <div>
+            <div class="device-name">${device.device_name}</div>
+            <div class="device-meta">Pin ${device.pin} • ${device.created_at}</div>
+          </div>
+        </div>
+        <span class="status-chip ${getStatusClass(device.status)}">${device.status}</span>
+      </div>
+    `).join('');
+  </script>
+</body>
+</html>
